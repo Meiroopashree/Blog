@@ -35,6 +35,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using dotnetapp.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 

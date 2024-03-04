@@ -7,7 +7,7 @@ EntityFrameworkCore;
 using System.Reflection.Metadata;
 using dotnetapp.Model;
 
-namespace dotnetapp.Model  // or dotnetapp.Models
+namespace dotnetapp.Model  
 {
 public class ApplicationDbContext : DbContext
 {
