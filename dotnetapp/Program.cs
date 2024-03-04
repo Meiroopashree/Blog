@@ -27,13 +27,25 @@
 
 
 using Microsoft.EntityFrameworkCore;
+// using dotnetapp.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var services = builder.Services;
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
+
+builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<IPostService, PostService>();    
 builder.Services.AddControllers();
+
+
 
 // Configure CORS in the ConfigureServices method
 builder.Services.AddCors(options =>

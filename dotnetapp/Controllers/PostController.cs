@@ -1,63 +1,81 @@
-// PostController.cs
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
-[Route("api/posts")]
-[ApiController]
-public class PostController : ControllerBase
+namespace dotnetapp.Controllers
 {
-    private readonly IPostService _postService;
-
-    public PostController(IPostService postService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PostController : ControllerBase
     {
-        _postService = postService;
-    }
+        private readonly ApplicationDbContext _dbContext;
 
-    [HttpGet]
-    public IActionResult GetPosts()
-    {
-        var posts = _postService.GetAllPosts();
-        return Ok(posts); // 200 OK
-    }
+        public PostController(ApplicationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-    [HttpGet("{id}")]
-    public IActionResult GetPost(int id)
-    {
-        var post = _postService.GetPost(id);
-        if (post == null)
-            return NotFound(); // 404 Not Found
+        [HttpPost]
+        public IActionResult Post([FromBody] Post post)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        return Ok(post); // 200 OK
-    }
+            _dbContext.Posts.Add(post);
+            _dbContext.SaveChanges();
 
-    [HttpPost]
-    public IActionResult CreatePost([FromBody] Post post)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState); // 400 Bad Request
+            return Ok(post);
+        }
 
-        _postService.SavePost(post);
-        return Created($"/api/posts/{post.Id}", post); // 201 Created
-    }
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var posts = _dbContext.Posts.ToList();
+            return Ok(posts);
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult UpdatePost(int id, [FromBody] Post post)
-    {
-        var existingPost = _postService.GetPost(id);
-        if (existingPost == null)
-            return NotFound(); // 404 Not Found
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
 
-        _postService.UpdatePost(post);
-        return NoContent(); // 204 No Content
-    }
+            if (post == null)
+                return NotFound();
 
-    [HttpDelete("{id}")]
-    public IActionResult DeletePost(int id)
-    {
-        var existingPost = _postService.GetPost(id);
-        if (existingPost == null)
-            return NotFound(); // 404 Not Found
+            return Ok(post);
+        }
 
-        _postService.DeletePost(id);
-        return NoContent(); // 204 No Content
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Post updatedPost)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingPost = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (existingPost == null)
+                return NotFound();
+
+            existingPost.Title = updatedPost.Title;
+            existingPost.Content = updatedPost.Content;
+
+            _dbContext.SaveChanges();
+
+            return Ok(existingPost);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (post == null)
+                return NotFound();
+
+            _dbContext.Posts.Remove(post);
+            _dbContext.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
