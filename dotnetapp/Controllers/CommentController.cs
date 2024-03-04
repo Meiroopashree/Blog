@@ -1,8 +1,6 @@
 // CommentController.cs
 
 using Microsoft.AspNetCore.Mvc;
-using dotnetapp.Data;
-using dotnetapp.Models;
 
 [Route("api/posts/{postId}/comments")]
 [ApiController]

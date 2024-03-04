@@ -1,7 +1,5 @@
 // PostController.cs
 using Microsoft.AspNetCore.Mvc;
-using dotnetapp.Data;
-using dotnetapp.Models;
 
 [Route("api/posts")]
 [ApiController]

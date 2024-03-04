@@ -27,7 +27,6 @@
 
 
 using Microsoft.EntityFrameworkCore;
-using dotnetapp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
