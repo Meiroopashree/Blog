@@ -5,7 +5,6 @@ using System.Linq;
 
 using dotnetapp.Model;
 
-
 public class CommentRepository
 {
     private readonly ApplicationDbContext _dbContext;
