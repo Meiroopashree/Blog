@@ -33,30 +33,26 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var services = builder.Services;
-// Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 builder.Services.AddScoped<PostRepository>();
-builder.Services.AddScoped<IPostService, PostService>();    
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddControllers();
 
-
-
-// Configure CORS in the ConfigureServices method
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
         builder => builder.WithOrigins()
-        .AllowAnyHeader()
-        .AllowAnyMethod());
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,14 +1,45 @@
+// CommentRepository.cs
+
+using System.Collections.Generic;
+using System.Linq;
 public class CommentRepository
 {
-    private readonly List<Comment> _comments = new List<Comment>();
+    private readonly ApplicationDbContext _dbContext;
 
-    public List<Comment> GetAllComments() => _comments;
+    public CommentRepository(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
-    public Comment GetComment(int id) => _comments.FirstOrDefault(c => c.Id == id);
+    public List<Comment> GetAllComments(int postId) => _dbContext.Comments.Where(c => c.PostId == postId).ToList();
 
-    public void SaveComment(Comment comment) => _comments.Add(comment);
+    public Comment GetComment(int commentId) => _dbContext.Comments.FirstOrDefault(c => c.Id == commentId);
 
-    public void UpdateComment(Comment comment) { /* Implement update logic */ }
+    public void SaveComment(Comment comment)
+    {
+        _dbContext.Comments.Add(comment);
+        _dbContext.SaveChanges();
+    }
 
-    public void DeleteComment(int id) => _comments.RemoveAll(c => c.Id == id);
+    public void UpdateComment(Comment comment)
+    {
+        var existingComment = _dbContext.Comments.FirstOrDefault(c => c.Id == comment.Id);
+
+        if (existingComment != null)
+        {
+            existingComment.Text = comment.Text;
+            _dbContext.SaveChanges();
+        }
+    }
+
+    public void DeleteComment(int commentId)
+    {
+        var comment = _dbContext.Comments.FirstOrDefault(c => c.Id == commentId);
+
+        if (comment != null)
+        {
+            _dbContext.Comments.Remove(comment);
+            _dbContext.SaveChanges();
+        }
+    }
 }
