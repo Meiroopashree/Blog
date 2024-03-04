@@ -2,66 +2,66 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using dotnetapp.Services;
+
 
 [Route("api/posts/{postId}/comments")]
 [ApiController]
 public class CommentController : ControllerBase
 {
-    private readonly CommentRepository _commentRepository;
+    private readonly ICommentService _commentService;
 
-    public CommentController(CommentRepository commentRepository)
+    public CommentController(ICommentService commentService)
     {
-        _commentRepository = commentRepository;
+        _commentService = commentService;
     }
 
     [HttpGet]
     public IActionResult GetComments(int postId)
     {
-        var comments = _commentRepository.GetAllComments(postId);
-        return Ok(comments); // 200 OK
+        var comments = _commentService.GetAllComments(postId);
+        return Ok(comments);
     }
 
     [HttpGet("{commentId}")]
     public IActionResult GetComment(int postId, int commentId)
     {
-        var comment = _commentRepository.GetComment(commentId);
+        var comment = _commentService.GetComment(commentId);
         if (comment == null)
-            return NotFound(); // 404 Not Found
+            return NotFound();
 
-        return Ok(comment); // 200 OK
+        return Ok(comment);
     }
 
     [HttpPost]
     public IActionResult CreateComment(int postId, [FromBody] Comment comment)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState); // 400 Bad Request
+            return BadRequest(ModelState);
 
-        comment.PostId = postId; // Associate comment with the post
-        _commentRepository.SaveComment(comment);
-        return Created($"/api/posts/{postId}/comments/{comment.Id}", comment); // 201 Created
+        _commentService.SaveComment(postId, comment);
+        return Created($"/api/posts/{postId}/comments/{comment.Id}", comment);
     }
 
     [HttpPut("{commentId}")]
     public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
     {
-        var existingComment = _commentRepository.GetComment(commentId);
+        var existingComment = _commentService.GetComment(commentId);
         if (existingComment == null)
-            return NotFound(); // 404 Not Found
+            return NotFound();
 
-        existingComment.Text = updatedComment.Text;
-        _commentRepository.UpdateComment(existingComment);
-        return NoContent(); // 204 No Content
+        _commentService.UpdateComment(updatedComment);
+        return NoContent();
     }
 
     [HttpDelete("{commentId}")]
     public IActionResult DeleteComment(int postId, int commentId)
     {
-        var existingComment = _commentRepository.GetComment(commentId);
+        var existingComment = _commentService.GetComment(commentId);
         if (existingComment == null)
-            return NotFound(); // 404 Not Found
+            return NotFound();
 
-        _commentRepository.DeleteComment(commentId);
-        return NoContent(); // 204 No Content
+        _commentService.DeleteComment(commentId);
+        return NoContent();
     }
 }

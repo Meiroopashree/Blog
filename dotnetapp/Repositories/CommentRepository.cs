@@ -2,61 +2,48 @@
 
 using System.Collections.Generic;
 using System.Linq;
-// CommentRepository.cs
+
+using dotnetapp.Model;
+
 public class CommentRepository
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly Dictionary<int, List<Comment>> _postComments = new Dictionary<int, List<Comment>>();
 
     public CommentRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public List<Comment> GetAllComments(int postId)
-    {
-        if (_postComments.TryGetValue(postId, out var comments))
-        {
-            return comments.ToList();
-        }
-        return new List<Comment>();
-    }
+    public List<Comment> GetAllComments(int postId) => _dbContext.Comments.Where(c => c.PostId == postId).ToList();
 
-    public Comment GetComment(int commentId) => _postComments.Values.SelectMany(comments => comments).FirstOrDefault(c => c.Id == commentId);
+    public Comment GetComment(int id) => _dbContext.Comments.FirstOrDefault(c => c.Id == id);
 
     public void SaveComment(int postId, Comment comment)
     {
-        if (!_postComments.ContainsKey(postId))
-        {
-            _postComments[postId] = new List<Comment>();
-        }
-
-        _postComments[postId].Add(comment);
+        comment.PostId = postId;
+        _dbContext.Comments.Add(comment);
+        _dbContext.SaveChanges();
     }
 
     public void UpdateComment(Comment comment)
     {
-        foreach (var comments in _postComments.Values)
+        var existingComment = _dbContext.Comments.FirstOrDefault(c => c.Id == comment.Id);
+
+        if (existingComment != null)
         {
-            var existingComment = comments.FirstOrDefault(c => c.Id == comment.Id);
-            if (existingComment != null)
-            {
-                existingComment.Text = comment.Text;
-                break;
-            }
+            existingComment.Text = comment.Text;
+            _dbContext.SaveChanges();
         }
     }
 
-    public void DeleteComment(int commentId)
+    public void DeleteComment(int id)
     {
-        foreach (var comments in _postComments.Values)
+        var comment = _dbContext.Comments.FirstOrDefault(c => c.Id == id);
+
+        if (comment != null)
         {
-            var comment = comments.FirstOrDefault(c => c.Id == commentId);
-            if (comment != null)
-            {
-                comments.Remove(comment);
-                break;
-            }
+            _dbContext.Comments.Remove(comment);
+            _dbContext.SaveChanges();
         }
     }
 }

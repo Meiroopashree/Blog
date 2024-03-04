@@ -1,8 +1,14 @@
-public interface ICommentService
+// ICommentService.cs
+using System.Collections.Generic;
+
+namespace dotnetapp.Services
 {
-    List<Comment> GetAllComments();
-    Comment GetComment(int id);
-    void SaveComment(Comment comment);
-    void UpdateComment(Comment comment);
-    void DeleteComment(int id);
+    public interface ICommentService
+    {
+        List<Comment> GetAllComments(int postId);
+        Comment GetComment(int id);
+        void SaveComment(int postId, Comment comment);
+        void UpdateComment(Comment comment);
+        void DeleteComment(int id);
+    }
 }

@@ -1,3 +1,4 @@
+// CommentService.cs
 using System.Collections.Generic;
 
 namespace dotnetapp.Services
@@ -15,7 +16,7 @@ namespace dotnetapp.Services
 
         public Comment GetComment(int id) => _commentRepository.GetComment(id);
 
-        public void SaveComment(Comment comment) => _commentRepository.SaveComment(comment);
+        public void SaveComment(int postId, Comment comment) => _commentRepository.SaveComment(postId, comment);
 
         public void UpdateComment(Comment comment) => _commentRepository.UpdateComment(comment);
 
