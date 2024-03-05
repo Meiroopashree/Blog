@@ -83,7 +83,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetComments(int postId)
+    public IActionResult GetAllComments(int postId)
     {
         var comments = _commentService.GetAllComments(postId);
         return Ok(comments);
@@ -100,7 +100,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateComment(int postId, [FromBody] Comment comment)
+    public IActionResult AddComment(int postId, [FromBody] Comment comment)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

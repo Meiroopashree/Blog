@@ -17,7 +17,7 @@ namespace dotnetapp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Post post)
+        public IActionResult AddPost([FromBody] Post post)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -29,14 +29,14 @@ namespace dotnetapp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllPosts()
         {
             var posts = _dbContext.Posts.ToList();
             return Ok(posts);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetPost(int id)
         {
             var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
 
@@ -66,7 +66,7 @@ namespace dotnetapp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeletePost(int id)
         {
             var post = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
 
