@@ -86,12 +86,14 @@ namespace dotnetapp.Repositories
 
         public void UpdateComment(Comment comment)
         {
-            var existingComment = _context.Comments.Find(comment.Id);
+            // var existingComment = _context.Comments.Find(comment.Id);
+        var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
             if (existingComment != null)
             {
                 existingComment.Text = comment.Text;
                 _context.SaveChanges();
             }
+
         }
 
         public void SaveComment(int postId, Comment comment)
