@@ -51,12 +51,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using dotnetapp.Data;
-using dotnetapp.Models;
+using dotnetapp.Model;
+using dotnetapp.Repositories;
 
-namespace dotnetapp.Data.Repositories
+namespace dotnetapp.Repositories
 {
-    public class CommentRepository : ICommentRepository
+    public class CommentRepository 
     {
         private readonly ApplicationDbContext _context;
 
@@ -93,6 +93,17 @@ namespace dotnetapp.Data.Repositories
                 _context.SaveChanges();
             }
         }
+
+        public void SaveComment(int postId, Comment comment)
+{
+    var post = _context.Posts.Find(postId);
+    if (post != null)
+    {
+        post.Comments.Add(comment);
+        _context.SaveChanges();
+    }
+}
+
 
         public void DeleteComment(int id)
         {
