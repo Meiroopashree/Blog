@@ -125,6 +125,7 @@ public class CommentController : ControllerBase
     [HttpPut("{commentId}")]
     public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
     {
+        Console.WriteLine(postId);
         var existingComment = _commentService.GetComment(commentId);
         Console.WriteLine(existingComment);
         if (existingComment == null)
