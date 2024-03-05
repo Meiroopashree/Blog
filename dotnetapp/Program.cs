@@ -44,6 +44,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<PostRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<CommentRepository>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
