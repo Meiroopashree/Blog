@@ -105,7 +105,7 @@ public void UpdateComment(Comment comment)
     if (existingComment != null)
     {
         // Log information using the built-in logging system
-        Console.WriteLine($"Existing Comment: Id={existingComment.Id}, Text={existingComment.Text}");
+        Console.WriteLine($"Existing Comment: Id={existingComment.Id}");
 
         // Check if comment.Text is not null before assigning it
         if (comment.Text != null)
@@ -120,7 +120,6 @@ public void UpdateComment(Comment comment)
 }
 
 
-        
         public void SaveComment(int postId, Comment comment)
 {
     var post = _context.Posts.Find(postId);

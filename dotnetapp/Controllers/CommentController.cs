@@ -126,12 +126,15 @@ public class CommentController : ControllerBase
     public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
     {
         Console.WriteLine(postId);
+         Console.WriteLine(commentId);
         var existingComment = _commentService.GetComment(commentId);
         Console.WriteLine(existingComment);
         if (existingComment == null)
             return NotFound();
 
         _commentService.UpdateComment(updatedComment);
+        Console.WriteLine(updatedComment);
+
         return NoContent();
     }
 
