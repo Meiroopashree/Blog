@@ -109,10 +109,24 @@ public class CommentController : ControllerBase
         return Created($"/api/posts/{postId}/comments/{comment.Id}", comment);
     }
 
+    // [HttpPut("{commentId}")]
+    // public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
+    // {
+    //     var existingComment = _commentService.GetComment(commentId);
+    //     if (existingComment == null)
+    //         return NotFound();
+
+    //     _commentService.UpdateComment(updatedComment);
+    //     return NoContent();
+    // }
+
+
+    
     [HttpPut("{commentId}")]
     public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
     {
         var existingComment = _commentService.GetComment(commentId);
+        Console.WriteLine(existingComment);
         if (existingComment == null)
             return NotFound();
 
