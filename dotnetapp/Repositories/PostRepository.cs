@@ -11,12 +11,14 @@ public class PostRepository
         _dbContext = dbContext;
     }
 
-    public List<Post> GetAllPosts() => _dbContext.Posts.ToList();
-    //  public List<Post> GetAllPosts()
-    //     {
-    //         // Include comments when retrieving all posts
-    //         return _dbContext.Posts.Include(p => p.Comments).ToList();
-    //     }
+    // public List<Post> GetAllPosts() => _dbContext.Posts.ToList();
+ public List<Post> GetAllPosts()
+{
+    return _dbContext.Posts
+        .Include(p => p.Comments)
+        .ToList();
+}
+
 
 
     public Post GetPost(int id) => _dbContext.Posts.FirstOrDefault(p => p.Id == id);

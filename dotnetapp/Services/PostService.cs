@@ -7,7 +7,12 @@ public class PostService : IPostService
         _postRepository = postRepository;
     }
 
-    public List<Post> GetAllPosts() => _postRepository.GetAllPosts();
+    // public List<Post> GetAllPosts() => _postRepository.GetAllPosts();
+    public List<Post> GetAllPosts()
+{
+    return _postRepository.GetAllPosts();
+}
+
 
     public Post GetPost(int id) => _postRepository.GetPost(id);
 
