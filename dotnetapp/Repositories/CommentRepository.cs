@@ -98,8 +98,9 @@ namespace dotnetapp.Repositories
 
 public void UpdateComment(Comment comment)
 {
-    // var existingComment = _context.Comments.Find(comment.Id);
-    var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
+     var existingComment = _context.Comments.Find(comment.Id);
+    // var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
+        Console.WriteLine($"Existing Comment: Id={existingComment}");
 
     // Check if existingComment is not null before attempting to access its properties
     if (existingComment != null)
