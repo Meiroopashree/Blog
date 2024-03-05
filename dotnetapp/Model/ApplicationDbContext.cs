@@ -16,15 +16,15 @@ namespace dotnetapp.Model
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        // protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // {
+        //     base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Post>()
-                .HasMany(p => p.Comments)
-                .WithOne(c => c.Post)
-                .HasForeignKey(c => c.PostId);
-        }
+        //     modelBuilder.Entity<Post>()
+        //         .HasMany(p => p.Comments)
+        //         .WithOne(c => c.Post)
+        //         .HasForeignKey(c => c.PostId);
+        // }
 
     }
 }

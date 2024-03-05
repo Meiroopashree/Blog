@@ -15,8 +15,9 @@ public class PostRepository
     public List<Post> GetAllPosts() =>
 
           _dbContext.Posts
-          .Include(p => p.Comments)
+        //   .Include(p => p.Comments)
           .ToList();
+
 
 
 
