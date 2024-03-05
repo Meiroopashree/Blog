@@ -49,66 +49,58 @@
 // }
 
 
-
 using System.Collections.Generic;
 using System.Linq;
-using dotnetapp.Models;
 using dotnetapp.Data;
+using dotnetapp.Models;
 
 namespace dotnetapp.Data.Repositories
 {
-    public class CommentRepository : ICommentService
+    public class CommentRepository : ICommentRepository
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext _context;
 
-        public CommentRepository(ApplicationDbContext dbContext)
+        public CommentRepository(ApplicationDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public List<Comment> GetAllComments(int postId)
-        {
-            // Assuming Comment has a navigation property Post
-            return _dbContext.Comments.Where(c => c.Post.Id == postId).ToList();
-        }
+        public List<Comment> GetAllComments(int postId) =>
+            _context.Posts
+                .Where(p => p.Id == postId)
+                .SelectMany(p => p.Comments)
+                .ToList();
 
-        public Comment GetComment(int id)
-        {
-            return _dbContext.Comments.FirstOrDefault(c => c.Id == id);
-        }
+        public Comment GetComment(int id) =>
+            _context.Comments.Find(id);
 
-        public void SaveComment(int postId, Comment comment)
+        public void AddComment(int postId, Comment comment)
         {
-            // Assuming Comment has a navigation property Post
-            comment.Post = _dbContext.Posts.FirstOrDefault(p => p.Id == postId);
-            
-            // Additional logic if Comment.Post is nullable and needs to be handled
-
-            _dbContext.Comments.Add(comment);
-            _dbContext.SaveChanges();
+            var post = _context.Posts.Find(postId);
+            if (post != null)
+            {
+                post.Comments.Add(comment);
+                _context.SaveChanges();
+            }
         }
 
         public void UpdateComment(Comment comment)
         {
-            // Assuming Comment has an Id property
-            var existingComment = _dbContext.Comments.FirstOrDefault(c => c.Id == comment.Id);
-
+            var existingComment = _context.Comments.Find(comment.Id);
             if (existingComment != null)
             {
                 existingComment.Text = comment.Text;
-                // Additional properties can be updated similarly
-                _dbContext.SaveChanges();
+                _context.SaveChanges();
             }
         }
 
         public void DeleteComment(int id)
         {
-            var comment = _dbContext.Comments.FirstOrDefault(c => c.Id == id);
-
+            var comment = _context.Comments.Find(id);
             if (comment != null)
             {
-                _dbContext.Comments.Remove(comment);
-                _dbContext.SaveChanges();
+                _context.Comments.Remove(comment);
+                _context.SaveChanges();
             }
         }
     }

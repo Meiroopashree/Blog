@@ -66,62 +66,68 @@
 //     }
 // }
 
-
-using System.Collections.Generic;
+// CommentController.cs
 using Microsoft.AspNetCore.Mvc;
-using dotnetapp.Models;
+using dotnetapp.Model;
 using dotnetapp.Services;
 
-namespace dotnetapp.Controllers
+[Route("api/posts/{postId}/comments")]
+[ApiController]
+public class CommentController : ControllerBase
 {
-    [ApiController]
-    [Route("api/comments")]
-    public class CommentController : ControllerBase
+    private readonly ICommentService _commentService;
+
+    public CommentController(ICommentService commentService)
     {
-        private readonly ICommentService _commentService;
+        _commentService = commentService;
+    }
 
-        public CommentController(ICommentService commentService)
-        {
-            _commentService = commentService;
-        }
+    [HttpGet]
+    public IActionResult GetComments(int postId)
+    {
+        var comments = _commentService.GetAllComments(postId);
+        return Ok(comments);
+    }
 
-        [HttpGet("{postId}")]
-        public ActionResult<List<Comment>> GetAllComments(int postId)
-        {
-            var comments = _commentService.GetAllComments(postId);
-            return Ok(comments);
-        }
+    [HttpGet("{commentId}")]
+    public IActionResult GetComment(int postId, int commentId)
+    {
+        var comment = _commentService.GetComment(commentId);
+        if (comment == null)
+            return NotFound();
 
-        [HttpGet("{id}")]
-        public ActionResult<Comment> GetComment(int id)
-        {
-            var comment = _commentService.GetComment(id);
+        return Ok(comment);
+    }
 
-            if (comment == null)
-                return NotFound();
+    [HttpPost]
+    public IActionResult CreateComment(int postId, [FromBody] Comment comment)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            return Ok(comment);
-        }
+        _commentService.SaveComment(postId, comment);
+        return Created($"/api/posts/{postId}/comments/{comment.Id}", comment);
+    }
 
-        [HttpPost("{postId}")]
-        public IActionResult SaveComment(int postId, [FromBody] Comment comment)
-        {
-            _commentService.SaveComment(postId, comment);
-            return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
-        }
+    [HttpPut("{commentId}")]
+    public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
+    {
+        var existingComment = _commentService.GetComment(commentId);
+        if (existingComment == null)
+            return NotFound();
 
-        [HttpPut]
-        public IActionResult UpdateComment([FromBody] Comment comment)
-        {
-            _commentService.UpdateComment(comment);
-            return NoContent();
-        }
+        _commentService.UpdateComment(updatedComment);
+        return NoContent();
+    }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteComment(int id)
-        {
-            _commentService.DeleteComment(id);
-            return NoContent();
-        }
+    [HttpDelete("{commentId}")]
+    public IActionResult DeleteComment(int postId, int commentId)
+    {
+        var existingComment = _commentService.GetComment(commentId);
+        if (existingComment == null)
+            return NotFound();
+
+        _commentService.DeleteComment(commentId);
+        return NoContent();
     }
 }

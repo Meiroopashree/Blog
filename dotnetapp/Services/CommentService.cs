@@ -27,16 +27,16 @@
 
 
 using System.Collections.Generic;
-using dotnetapp.Models;
-using dotnetapp.Data.Repositories;
+using dotnetapp.Model;
+using dotnetapp.Repositories;
 
 namespace dotnetapp.Services
 {
     public class CommentService : ICommentService
     {
-        private readonly ICommentRepository _commentRepository;
+        private readonly CommentRepository _commentRepository;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(CommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
         }
