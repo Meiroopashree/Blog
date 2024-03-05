@@ -100,20 +100,18 @@ public void UpdateComment(Comment comment)
 {
      var existingComment = _context.Comments.Find(comment.Id);
     // var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
-        Console.WriteLine($"Existing Comment: Id={existingComment}");
+        // Console.WriteLine($"Existing Comment: Id={existingComment}");
 
-    // Check if existingComment is not null before attempting to access its properties
     if (existingComment != null)
     {
-        // Log information using the built-in logging system
-        Console.WriteLine($"Existing Comment: Id={existingComment.Id}");
+        // Console.WriteLine($"Existing Comment: Id={existingComment.Id}");
 
         // Check if comment.Text is not null before assigning it
         if (comment.Text != null)
         {
             existingComment.Text = comment.Text;
         }
-        Console.WriteLine($"Existing Comment: Id={existingComment.Id}, Text={existingComment.Text}");
+        // Console.WriteLine($"Existing Comment: Id={existingComment.Id}, Text={existingComment.Text}");
 
         _context.SaveChanges();
     }
