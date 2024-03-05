@@ -56,10 +56,22 @@ namespace dotnetapp.Services
             _commentRepository.SaveComment(postId, comment);
         }
 
-        public void UpdateComment(Comment comment)
-        {
-            _commentRepository.UpdateComment(comment);
-        }
+        // public void UpdateComment(Comment comment)
+        // {
+        //     _commentRepository.UpdateComment(comment);
+        // }
+        public Comment UpdateComment(int commentId, Comment updatedComment)
+    {
+        var existingComment = _commentRepository.GetComment(commentId);
+
+        if (existingComment == null)
+            return null;
+
+        existingComment.Text = updatedComment.Text;
+        _commentRepository.UpdateComment(existingComment);
+
+        return existingComment;
+    }
 
         public void DeleteComment(int id)
         {

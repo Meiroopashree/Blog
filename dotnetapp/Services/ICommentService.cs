@@ -8,7 +8,9 @@ namespace dotnetapp.Services
         List<Comment> GetAllComments(int postId);
         Comment GetComment(int id);
         void SaveComment(int postId, Comment comment);
-        void UpdateComment(Comment comment);
+        // void UpdateComment(Comment comment);
+        Comment UpdateComment(int commentId, Comment updatedComment);
+
         void DeleteComment(int id);
     }
 }

@@ -122,22 +122,30 @@ public class CommentController : ControllerBase
 
 
     
-    [HttpPut("{commentId}")]
+    // [HttpPut("{commentId}")]
+    // public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
+    // {
+    //     Console.WriteLine(postId);
+    //     Console.WriteLine(commentId);
+    //     var existingComment = _commentService.GetComment(commentId);
+    //     Console.WriteLine(existingComment);
+    //     if (existingComment == null)
+    //         return NotFound();
+
+    //     _commentService.UpdateComment(updatedComment);
+    //     Console.WriteLine(updatedComment);
+
+    //     return NoContent();
+    // }
+ [HttpPut("{commentId}")]
     public IActionResult UpdateComment(int postId, int commentId, [FromBody] Comment updatedComment)
     {
-        Console.WriteLine(postId);
-        Console.WriteLine(commentId);
-        var existingComment = _commentService.GetComment(commentId);
-        Console.WriteLine(existingComment);
-        if (existingComment == null)
+        var result = _commentService.UpdateComment(commentId, updatedComment);
+        if (result == null)
             return NotFound();
 
-        _commentService.UpdateComment(updatedComment);
-        Console.WriteLine(updatedComment);
-
-        return NoContent();
+        return Ok(result);
     }
-
     [HttpDelete("{commentId}")]
     public IActionResult DeleteComment(int postId, int commentId)
     {
