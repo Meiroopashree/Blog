@@ -84,16 +84,34 @@ namespace dotnetapp.Repositories
             }
         }
 
-        public void UpdateComment(Comment comment)
+        // public void UpdateComment(Comment comment)
+        // {
+        //     // var existingComment = _context.Comments.Find(comment.Id);
+        // var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
+        //     if (existingComment != null)
+        //     {
+        //         existingComment.Text = comment.Text;
+        //         _context.SaveChanges();
+        //     }
+
+        // }
+
+          public void UpdateComment(Comment comment)
         {
-            // var existingComment = _context.Comments.Find(comment.Id);
-        var existingComment = _context.Comments.FirstOrDefault(p => p.Id == comment.Id);
+            // Assuming Comment has an Id property
+            var existingComment = _context.Comments.Find(comment.Id);
+
             if (existingComment != null)
             {
+                // Attach the existingComment to the context if it's not being tracked
+                if (!_context.Comments.Local.Contains(existingComment))
+                {
+                    _context.Comments.Attach(existingComment);
+                }
+
                 existingComment.Text = comment.Text;
                 _context.SaveChanges();
             }
-
         }
 
         public void SaveComment(int postId, Comment comment)
